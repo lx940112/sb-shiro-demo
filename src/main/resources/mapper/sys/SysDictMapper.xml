@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xlkh.shiro.demo.dao.sys.SysDictDao">
+    <resultMap id="sysDict" type="com.xlkh.shiro.demo.entity.sys.SysDict">
+        <id column="id" property="id" javaType="long"/>
+        <result column="parent_id" property="parentId" javaType="long"/>
+        <result column="dict_type" property="dictType" javaType="string"/>
+        <result column="dict_name" property="dictName" javaType="string"/>
+        <result column="dict_value" property="dictValue" javaType="string"/>
+        <result column="remark" property="remark" javaType="string"/>
+        <result column="sort" property="sort" javaType="integer"/>
+        <result column="del_flag" property="delFlag" javaType="integer"/>
+        <result column="create_user" property="createUser" javaType="long"/>
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime"/>
+        <result column="update_user" property="updateUser" javaType="long"/>
+        <result column="update_time" property="updateTime" javaType="java.time.LocalDateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,<!-- id -->
+        parent_id,<!-- 上级ID，一级为0 -->
+        dict_type,<!-- 字典类型 -->
+        dict_name,<!-- 字典名称 -->
+        dict_value,<!-- 字典值 -->
+        remark,<!-- 备注 -->
+        sort,<!-- 排序 -->
+        del_flag,<!-- 删除标识:1-未删除; 0-删除 -->
+        create_user,<!-- 创建人 -->
+        create_time,<!-- 创建时间 -->
+        update_user,<!-- 更新人 -->
+        update_time<!-- 更新时间 -->
+    </sql>
+
+
+    <update id="updateDictType">
+        UPDATE sys_dict
+        SET dict_type = #{dictType}
+        WHERE
+            parent_id = #{pid}
+    </update>
+
+</mapper>

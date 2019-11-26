@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xlkh.shiro.demo.dao.sys.SysRoleDao" >
+  <resultMap id="sysRole" type="com.xlkh.shiro.demo.entity.sys.SysRole" >
+    <id column="id" property="id" javaType="long" />
+    <result column="role_name" property="roleName" javaType="string" />
+    <result column="role_desc" property="roleDesc" javaType="string" />
+    <result column="del_flag" property="delFlag" javaType="integer" />
+    <result column="dept_id" property="deptId" javaType="long" />
+    <result column="create_user" property="createUser" javaType="long" />
+    <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" />
+    <result column="update_user" property="updateUser" javaType="long" />
+    <result column="update_time" property="updateTime" javaType="java.time.LocalDateTime" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id,<!-- id -->
+    role_name,<!-- 角色名称 -->
+    role_desc,<!-- 描述 -->
+    del_flag,<!-- 删除标识:1-未删除; 0-删除 -->
+    dept_id,<!-- 部门ID -->
+    create_user,<!-- 创建人 -->
+    create_time,<!-- 创建时间 -->
+    update_user,<!-- 更新人 -->
+    update_time<!-- 更新时间 -->
+  </sql>
+  
+  <!-- 查询select部分  -->
+  <sql id="selector">
+  	SELECT
+  	<if test="fields != null">
+  	 	${fields}
+  	</if>
+  	<if test="fields == null">
+  		<include refid="Base_Column_List"/>
+  	</if>
+  	FROM sys_role
+  </sql>
+  <!-- 查询where语句部分 -->
+  <sql id="where">
+	<where>
+		<if test="id != null  and keys == null">
+			AND id = #{id}
+		</if>
+		<!-- 后期添加 -->
+		<if test="keys != null">
+			AND id in 
+			<foreach collection="keys" item="key" open="(" close=")" separator=",">
+				#{key}
+			</foreach>
+		</if>
+		<if test="roleName != null and roleName != ''">
+            <if test="roleNameLike == null or roleNameLike == ''">
+                AND role_name = #{roleName}
+            </if>
+            <if test="roleNameLike != null and roleNameLike != ''">
+                AND role_name LIKE #{roleNameLike} ESCAPE '/'
+            </if>
+		</if>
+		<if test="roleDesc != null and roleDesc != ''">
+            <if test="roleDescLike == null or roleDescLike == ''">
+                AND role_desc = #{roleDesc}
+            </if>
+            <if test="roleDescLike != null and roleDescLike != ''">
+                AND role_desc LIKE #{roleDescLike} ESCAPE '/'
+            </if>
+		</if>
+		<if test="delFlag != null ">
+            AND del_flag = #{delFlag}
+		</if>
+		<if test="deptId != null ">
+            AND dept_id = #{deptId}
+		</if>
+		<if test="createUser != null ">
+            AND create_user = #{createUser}
+		</if>
+		<if test="createTime != null ">
+            AND create_time = #{createTime}
+		</if>
+		<if test="updateUser != null ">
+            AND update_user = #{updateUser}
+		</if>
+		<if test="updateTime != null ">
+            AND update_time = #{updateTime}
+		</if>
+		<!-- 后期添加 -->
+		<if test="beginDate != null">
+			AND create_time &gt;= #{beginDate}
+		</if>
+		<if test="endDate != null">
+			AND create_time &lt;= #{endDate}
+		</if>
+		<if test="customQueryCondition != null and customQueryCondition != ''">
+			${customQueryCondition }
+		</if>
+	</where>
+  </sql>
+  <!-- 查询分组语句 -->
+  <sql id="groupBy">
+  	<if test="groupByFields != null and groupByFields.size>0">
+  		GROUP BY
+  		<foreach collection="groupByFields" item="groupByField" separator=",">
+  			${groupByField.field}
+  		</foreach>
+  	</if>
+  </sql>
+  <!-- 查询语句order by 部分 -->
+  <sql id="orderBy">
+  	<if test="orderByFields != null and orderByFields.size>0">
+  		ORDER BY
+  		<foreach collection="orderByFields" item="orderByField" separator=",">
+  			${orderByField.field} ${orderByField.order}
+  		</foreach>
+  	</if>
+  </sql>
+  
+  <sql id="limit">
+  	<if test="startRow != null">
+  		LIMIT  ${startRow},${pageSize}
+  	</if>
+  </sql>
+
+</mapper>

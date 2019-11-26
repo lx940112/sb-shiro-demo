@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xlkh.shiro.demo.dao.sys.SysRoleFuncDao">
+    <resultMap id="sysRoleFunc" type="com.xlkh.shiro.demo.entity.sys.SysRoleFunc">
+        <id column="id" property="id" javaType="long"/>
+        <result column="role_id" property="roleId" javaType="long"/>
+        <result column="func_id" property="funcId" javaType="long"/>
+        <result column="create_user" property="createUser" javaType="long"/>
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,<!-- 关系ID -->
+        role_id,<!-- 角色ID -->
+        func_id,<!-- 功能ID -->
+        create_user,<!-- 创建人 -->
+        create_time<!-- 创建时间 -->
+    </sql>
+
+
+    <select id="getMenuIdList" resultType="long">
+        SELECT
+            func_id
+        FROM
+            sys_role_func
+        WHERE
+            role_id = #{value}
+    </select>
+
+    <delete id="deleteByRoleId">
+        DELETE
+        FROM
+            sys_role_func
+        WHERE
+            role_id = #{value}
+    </delete>
+
+    <delete id="deleteByMenuId">
+        delete from sys_role_func where func_id = #{value}
+    </delete>
+
+
+</mapper>

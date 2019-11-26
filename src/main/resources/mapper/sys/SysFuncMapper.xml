@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xlkh.shiro.demo.dao.sys.SysFuncDao">
+    <resultMap id="sysFunc" type="com.xlkh.shiro.demo.entity.sys.SysFunc">
+        <id column="id" property="id" javaType="long"/>
+        <result column="func_code" property="funcCode" javaType="string"/>
+        <result column="func_name" property="funcName" javaType="string"/>
+        <result column="parent_id" property="parentId" javaType="long"/>
+        <result column="func_desc" property="funcDesc" javaType="string"/>
+        <result column="func_method" property="funcMethod" javaType="string"/>
+        <result column="func_url" property="funcUrl" javaType="string"/>
+        <result column="func_icon" property="funcIcon" javaType="string"/>
+        <result column="remark" property="remark" javaType="string"/>
+        <result column="func_type" property="funcType" javaType="integer"/>
+        <result column="auth_level" property="authLevel" javaType="integer"/>
+        <result column="del_flag" property="delFlag" javaType="integer"/>
+        <result column="sort" property="sort" javaType="integer"/>
+        <result column="target" property="target" javaType="string"/>
+        <result column="create_user" property="createUser" javaType="long"/>
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime"/>
+        <result column="update_user" property="updateUser" javaType="long"/>
+        <result column="update_time" property="updateTime" javaType="java.time.LocalDateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,<!-- 功能ID -->
+        func_code,<!-- 功能代码 -->
+        func_name,<!-- 功能名称 -->
+        parent_id,<!-- 父级功能ID,一级菜单为0 -->
+        func_desc,<!-- 功能描述 -->
+        func_method,<!-- 请求方式（如：GET、POST、PUT、DELETE） -->
+        func_url,<!-- 功能URL -->
+        func_icon,<!-- 图标 -->
+        remark,<!-- 功能备注 -->
+        func_type,<!-- 功能类型：0-菜单,1-按钮 -->
+        auth_level,<!-- 认证等级：0-权限认证;1-登录认证;2-无需认证 -->
+        del_flag,<!-- 删除标识:1-未删除; 0-删除 -->
+        sort,<!-- 排序 -->
+        target,<!-- 打开链接 -->
+        create_user,<!-- 创建人 -->
+        create_time,<!-- 创建时间 -->
+        update_user,<!-- 更新人 -->
+        update_time<!-- 更新时间 -->
+    </sql>
+
+    <select id="getById" resultType="com.xlkh.shiro.demo.entity.sys.SysFunc">
+       SELECT
+            t1.*
+        FROM
+            sys_func
+        WHERE
+            id = #{id}
+        AND del_flag = 0
+    </select>
+
+    <select id="getMenuList" resultType="com.xlkh.shiro.demo.entity.sys.SysFunc">
+        SELECT
+            *
+        FROM
+            sys_func
+        WHERE
+            del_flag = 0
+        ORDER BY
+        <if test="type != null">
+            and func_type = #{type}
+        </if>
+            sort ASC
+    </select>
+
+    <select id="getUserMenuList" resultType="com.xlkh.shiro.demo.entity.sys.SysFunc">
+        SELECT
+            t3.*
+        FROM
+            sys_role_user t1
+        LEFT JOIN sys_role_func t2 ON t1.role_id = t2.role_id
+        LEFT JOIN sys_func t3 ON t2.func_id = t3.id
+        WHERE
+            t1.user_id = #{userId}
+        AND t3.del_flag = 0
+        <if test="type != null">
+            and t3.type = #{type}
+        </if>
+        ORDER BY
+            t3.sort ASC
+    </select>
+
+
+    <select id="getListPid" resultType="com.xlkh.shiro.demo.entity.sys.SysFunc">
+        SELECT
+            *
+        FROM
+            sys_func
+        WHERE
+            del_flag = 0
+        AND parent_id = #{pid}
+    </select>
+
+    <select id="getResourceList" resultType="com.xlkh.shiro.demo.entity.sys.SysFunc">
+        SELECT
+            func_url,
+            func_method,
+            auth_level
+        FROM
+            sys_func
+        ORDER BY
+            auth_level DESC
+    </select>
+
+    <select id="getUserResourceList" resultType="com.xlkh.shiro.demo.entity.sys.SysFunc">
+       SELECT
+            sf.func_url,
+            sf.func_method
+        FROM
+            sys_role_user ru
+        LEFT JOIN sys_role_func rf ON ru.role_id = rf.role_id
+        INNER JOIN sys_func sf ON sf.id = rf.func_id
+        WHERE
+        user_id = #{userId}
+    </select>
+
+
+</mapper>

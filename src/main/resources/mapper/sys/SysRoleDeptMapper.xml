@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xlkh.shiro.demo.dao.sys.SysRoleDeptDao">
+    <resultMap id="sysRoleDept" type="com.xlkh.shiro.demo.entity.sys.SysRoleDept">
+        <id column="id" property="id" javaType="long"/>
+        <result column="role_id" property="roleId" javaType="long"/>
+        <result column="dept_id" property="deptId" javaType="long"/>
+        <result column="create_user" property="createUser" javaType="long"/>
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,<!-- id -->
+        role_id,<!-- 角色ID -->
+        dept_id,<!-- 部门ID -->
+        create_user,<!-- 创建者 -->
+        create_time<!-- 创建时间 -->
+    </sql>
+
+    <select id="getDeptIdList" resultType="long">
+        SELECT
+            dept_id
+        FROM
+            sys_role_dept
+        WHERE
+            role_id = #{value}
+    </select>
+
+    <select id="getDataScopeList" resultType="long">
+        SELECT
+            t2.dept_id
+        FROM
+            sys_role_user t1,
+            sys_role_dept t2
+        WHERE
+            t1.user_id = #{value}
+        AND t1.role_id = t2.role_id
+    </select>
+
+    <delete id="deleteByRoleId">
+        delete from sys_role_dept where role_id = #{value}
+    </delete>
+
+</mapper>
